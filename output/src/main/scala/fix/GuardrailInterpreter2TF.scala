@@ -12,7 +12,7 @@ object GuardrailInterpreter2TF {
   case class Bar(a: Boolean, b: String)
   case class VendorPrefixes[L](a: Long, b: Bar) extends ScalaTerm[L, List[String]]
 
-  object JavaInterp extends (({ type F[A] = ScalaTerm[JavaLanguage, A] })#F ~> Target) {
+  object JavaInterp extends (ScalaTerm[JavaLanguage, ?] ~> Target) {
     type F[A] = Target[A]
     type L = JavaLanguage
 
