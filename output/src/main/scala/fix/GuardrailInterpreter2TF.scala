@@ -1,9 +1,6 @@
-/*
-rule = Guardrail
-*/
 package fix
 
-object Guardrail {
+object GuardrailInterpreter2TF {
   type Target[A] = Option[A]
   type JavaLanguage = Unit
   abstract class ~>[F[_], G[_]] {
@@ -19,14 +16,14 @@ object Guardrail {
     type F[A] = Target[A]
     type L = JavaLanguage
 
-    def vendorPrefixes(a: Long, b: Bar): F[List[String]] = ???
+    def vendorPrefixes(foo: Long, b: Bar): F[List[String]] = {
+  val Bar(_a, _b) = b
+  for (a <- Option(foo.toString()); b <- Option(_b)) yield List(a, b)
+}
 
     def apply[T](term: ScalaTerm[JavaLanguage, T]): Target[T] = term match {
-      case VendorPrefixes(foo, Bar(_a, _b)) =>
-        for {
-          a <- Option(foo.toString())
-          b <- Option(_b)
-        } yield List(a, b)
+      case VendorPrefixes(a, b) =>
+        vendorPrefixes(a, b)
     }
   }
 }
