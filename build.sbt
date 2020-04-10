@@ -14,6 +14,8 @@ inThisBuild(
     ),
     scalaVersion := V.scala212,
     addCompilerPlugin(scalafixSemanticdb),
+    addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
+    addCompilerPlugin("org.typelevel" %% "kind-projector" %  "0.10.3"),
     scalacOptions ++= List(
       "-Yrangepos",
       "-P:semanticdb:synthetics:on"
