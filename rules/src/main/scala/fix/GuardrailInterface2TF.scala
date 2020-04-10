@@ -13,8 +13,9 @@ class GuardrailInterface2TF extends SemanticRule("GuardrailInterface2TF") {
           case other => println(s"Unimplemented for $other"); ???
         }
 
+        val monadDefn = q"def MonadF = Free.catsFreeMonadForFree"
         val patchInterpDefn = Patch.replaceTree(defnDef, defnDef.copy(
-          body=q"new ${classInit.copy(tpe=newInitTpe)} { ..$body }",
+          body=q"new ${classInit.copy(tpe=newInitTpe)} { ..${monadDefn +: body} }",
           decltpe=Some(t"${clsType}[$l, Free[$f, ?]]")
         ).syntax)
 
@@ -22,9 +23,11 @@ class GuardrailInterface2TF extends SemanticRule("GuardrailInterface2TF") {
           case Defn.Def(mods, name, tparms, paramss, Some(t"Free[$f, $a]"), defn) => Decl.Def(mods, name, tparms, paramss, t"$f[$a]")
           case other => other
         }
+        val monadDecl = q"def MonadF: Monad[F]"
+
         val newInterface = q"""
         abstract class ${Type.Name(name)}[..$interfaceTargs] {
-          ..${newInterfaceBody}
+          ..${monadDecl +: newInterfaceBody}
         }
         """
 
