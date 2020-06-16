@@ -30,13 +30,21 @@ lazy val rules = project.settings(
   libraryDependencies += "ch.epfl.scala" %% "scalafix-core" % V.scalafixVersion
 )
 
+lazy val inputDeps = (project in file("input-deps")).settings(
+  skip in publish := true
+)
+
 lazy val input = project.settings(
+  skip in publish := true
+).dependsOn(inputDeps)
+
+lazy val outputDeps = (project in file("output-deps")).settings(
   skip in publish := true
 )
 
 lazy val output = project.settings(
   skip in publish := true
-)
+).dependsOn(outputDeps)
 
 lazy val tests = project
   .settings(
