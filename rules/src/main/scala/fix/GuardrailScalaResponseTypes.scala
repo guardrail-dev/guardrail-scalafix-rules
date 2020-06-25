@@ -16,28 +16,18 @@ class GuardrailScalaResponseTypes extends SemanticRule("GuardrailScalaResponseTy
         List(Term.Param(
           Nil,
           Term.Name("respond"),
-          Some(Type.Singleton(Term.Select(resourceType, Term.Name(responseType)))), None
+          Some(Type.Singleton(Term.Select(resourceType, responseTypeTree@Term.Name(responseType)))), None
         )) :: otherArgs,
         Some(Type.Apply(
           returnTypeName,
-          List(Type.Select(returnResourceType, Type.Name(returnResponseType)))
+          List(Type.Select(returnResourceType, returnResponseTypeTree@Type.Name(returnResponseType)))
         )),
         _
       ) =>
-        Patch.replaceTree(defn, defn.copy(
-          paramss = List(Term.Param(
-            Nil,
-            Term.Name("respond"),
-            Some(Type.Singleton(Term.Select(
-              resourceType,
-              Term.Name(cap(responseType))
-            ))),
-            None
-          )) :: otherArgs,
-          decltpe = Some(Type.Apply(
-            returnTypeName,
-            List(Type.Select(returnResourceType, Type.Name(cap(returnResponseType))))))
-        ).toString)
-    }).asPatch
+        List(
+          Patch.replaceTree(responseTypeTree, Term.Name(cap(responseType)).toString()),
+          Patch.replaceTree(returnResponseTypeTree, Type.Name(cap(returnResponseType)).toString()),
+        )
+    }).flatten.asPatch
   }
 }
