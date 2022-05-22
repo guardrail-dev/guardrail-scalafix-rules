@@ -4,8 +4,8 @@ import java.util.Locale
 import scalafix.v1._
 import scala.meta._
 
-class GuardrailIteratorToVector extends SemanticRule("GuardrailIteratorToVector") {
-  def extract(matchesRespondType: PartialFunction[Tree, Boolean])(implicit doc: SemanticDocument): PartialFunction[Tree, Seq[Patch]] = {
+class GuardrailIterableToVector extends SemanticRule("GuardrailIterableToVector") {
+  def extract(matchesRespondType: PartialFunction[Tree, Boolean]): PartialFunction[Tree, Seq[Patch]] = {
     case defn @ Defn.Def(
       _,
       _,
@@ -22,14 +22,14 @@ class GuardrailIteratorToVector extends SemanticRule("GuardrailIteratorToVector"
         params.flatMap {
           case param@Term.Param(mod, name, tpe, default) =>
             tpe.toSeq.flatMap(_.collect({
-              case Type.Apply(tpe@t"Iterator", inner) =>
+              case Type.Apply(tpe@t"Iterable", inner) =>
                 Patch.replaceTree(tpe, t"Vector".syntax)
             }))
         }
       }
 
       if (result.nonEmpty) {
-        println(s"Replacing Iterator with Vector in ${defn.copy(body = q"???")}")
+        println(s"Replacing Iterable with Vector in ${defn.copy(body = q"???")}")
       }
 
       result

@@ -1,4 +1,4 @@
 fix.GuardrailInterpreter2TF
 fix.GuardrailInterface2TF
 fix.GuardrailScalaResponseTypes
-fix.GuardrailIteratorToVector
+fix.GuardrailIterableToVector

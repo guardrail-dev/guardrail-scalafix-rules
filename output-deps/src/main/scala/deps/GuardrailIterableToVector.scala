@@ -1,8 +1,8 @@
 package deps
 
-object GuardrailIteratorToVector {
+object GuardrailIterableToVector {
   trait FooHandler {
-    def doFoo(respond: FooResource.DoFooResponse.type)(xs: Iterator[Iterator[Iterator[String]]]): scala.concurrent.Future[FooResource.DoFooResponse]
+    def doFoo(respond: FooResource.DoFooResponse.type)(xs: Vector[Vector[Vector[String]]], y: Option[String]): scala.concurrent.Future[FooResource.DoFooResponse]
   }
 
   object FooResource {
